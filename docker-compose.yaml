@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - database
+    volumes:
+      - .:/app
+      - /app/node_modules 
+    ports:
+      - "3000:3000" 
+
+
+  database:
+    image: mongo
+    restart: always
+    container_name: my_mongo_container
+    environment: 
+     - MONGO_INITDB_ROOT_USERNAME=root
+     - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes: 
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongo-volume:/data/db
+    ports: 
+      - '27107:27107'
